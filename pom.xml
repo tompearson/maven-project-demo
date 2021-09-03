@@ -1,8 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <!--    Article for this code https://dev.to/saiupadhyayula/maven-complete-tutorial-for-beginners-1jek#chapter-2-->
+
+    <!--    09/03/2021 TP added <Properties> per http://maven.apache.org/general.html#encoding-warning-->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <groupId>com.programming.techie</groupId>
     <artifactId>maven-project-demo</artifactId>
@@ -12,7 +18,7 @@
         <repository>
             <id>test.distribution</id>
             <name>MyCo Internal Repository</name>
-            <url>http://Host to Company Repository</url>
+            <url>https://github.com/tompearson/maven-project-demo/blob/master/distribution/</url>
         </repository>
     </distributionManagement>
 
@@ -35,22 +41,40 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
                     <configuration>
-                        <!-- put your configurations here -->
-<!--                        <source>15</source>-->
-<!--                        <target>15</target>-->
+                        <!-- Put your configurations here. These override the Intellij Java version configuration.
+                        However, using 15 fails. So just use the Intelij version at jdk1.8.0_91 -->
+                        <!--                        <source>15</source>-->
+                        <!--                        <target>15</target>-->
                     </configuration>
+                </plugin>
+                <plugin>
+                    <!-- TP 09/09/2021 Added to fix maven-surefire-plugin. Now creates ./target/site html          -->
+                    <!-- https://stackoverflow.com/questions/51091539/maven-site-plugins-3-3-java-lang-classnotfoundexception-org-apache-maven-doxia-->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.7.1</version>
+                </plugin>
+                <plugin>
+                    <!-- TP 09/09/2021 Added to fix maven-surefire-plugin. Now creates ./target/site html          -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-<!--                    <version>2.22.2</version>-->
+                    <!--                    <version>2.22.2</version>-->
                     <version>3.0.0-M5</version>
                     <configuration>
-<!--                        <outputDirectory>${basedir}/target/newsite</outputDirectory>-->
-<!--                            <argLine>-Xmx512m</argLine>-->
-<!--                            <forkMode>pertest</forkMode>-->
-<!--                            <childDelegation>true</childDelegation>-->
-<!--                            <testFailureIgnore>true</testFailureIgnore>-->
+                        <outputDirectory>${basedir}/target/newsite</outputDirectory>
+                        <argLine>-Xmx512m</argLine>
+                        <!-- TP 09/03/2021 Fixed depreciated <forkMode> with <forkCount> and reuseForks>
+                            https://stackoverflow.com/questions/40096382/maven-surefire-forkmode-pertest-deprecated-what-is-the-new-settings
+                        <forkMode>pertest</forkMode>-->
+                        <forkCount>1</forkCount>
+                        <reuseForks>false</reuseForks>
+                        <childDelegation>true</childDelegation>
+                        <testFailureIgnore>true</testFailureIgnore>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -61,7 +85,6 @@
             </plugins>
         </pluginManagement>
     </build>
-
 
 
 </project>
